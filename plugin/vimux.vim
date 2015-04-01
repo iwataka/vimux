@@ -32,6 +32,7 @@ function! VimuxRunLastCommand()
 endfunction
 
 function! VimuxRunCommand(command, ...)
+  sil exe '!tmux resize-pane'
   if !exists("g:VimuxRunnerIndex") || _VimuxHasRunner(g:VimuxRunnerIndex) == -1
     call VimuxOpenRunner()
   endif
