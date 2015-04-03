@@ -73,13 +73,8 @@ function! VimuxOpenRunner()
   else
     if _VimuxRunnerType() == "pane"
       let height = _VimuxOption("g:VimuxHeight", 20)
-      if height == ''
-        let heightOpt = ''
-      else
-        let heightOpt = '-p ' . height
-      endif
       let orientation = _VimuxOption("g:VimuxOrientation", "v")
-      call system("tmux split-window ".heightOpt." -".orientation)
+      call system("tmux split-window -p ".height." -".orientation)
     elseif _VimuxRunnerType() == "window"
       call system("tmux new-window")
     endif
@@ -99,17 +94,11 @@ endfunction
 function! VimuxTogglePane()
   if exists("g:VimuxRunnerIndex")
     if _VimuxRunnerType() == "window"
-      let height = _VimuxOption("g:VimuxHeight", 20)
-      if height == ''
-        let heightOpt = ''
-      else
-        let heightOpt = '-p ' . height
-      endif
-      call system("tmux join-pane -d -s ".g:VimuxRunnerIndex." ".heightOpt)
-      let g:VimuxRunnerType = "pane"
+        call system("tmux join-pane -d -s ".g:VimuxRunnerIndex." -p "._VimuxOption("g:VimuxHeight", 20))
+        let g:VimuxRunnerType = "pane"
     elseif _VimuxRunnerType() == "pane"
 		let g:VimuxRunnerIndex=substitute(system("tmux break-pane -d -t ".g:VimuxRunnerIndex." -P -F '#{window_index}'"), "\n", "", "")
-      let g:VimuxRunnerType = "window"
+        let g:VimuxRunnerType = "window"
     endif
   endif
 endfunction
